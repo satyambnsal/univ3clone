@@ -13,6 +13,7 @@ contract UniswapV3Pool {
     using Tick for mapping(int24 => Tick.Info);
     using Position for mapping(bytes32 => Position.Info);
     using Position for Position.Info;
+    using TickMap for mapping(int16 => uint246);
 
     error InsufficientInputAmount();
     error InvalidTickRange();
@@ -62,6 +63,7 @@ contract UniswapV3Pool {
     mapping(int24 => Tick.Info) public ticks;
 
     mapping(bytes32 => Position.Info) public positions;
+    mapping(int16 => uint256) public tickBitmap;
 
     // uint256 amount0 = 0.998976618347425280 ether;
     // uint256 amount1 = 5000 ether;
@@ -95,8 +97,15 @@ contract UniswapV3Pool {
 
         if (amount == 0) revert ZeroLiquidity();
 
-        ticks.update(lowerTick, amount);
-        ticks.update(upperTick, amount);
+        bool flippedLower = ticks.update(lowerTick, amount);
+        bool flippedUpper = ticks.update(upperTick, amount);
+
+        if (flippedLower) {
+            tickBitmap.flipTick(lowerTick, 1);
+        }
+        if (flippedUpper) {
+            tickBitmap.flipTick(upperTick, 1);
+        }
 
         Position.Info storage position = positions.get(
             owner,
