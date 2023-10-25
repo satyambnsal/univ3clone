@@ -1,7 +1,9 @@
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity ^0.8.14;
 
-import "prb-math/PRBMath.sol";
+import "./FullMath.sol";
+import "./UnsafeMath.sol";
+import "./FixedPoint96.sol";
 
 library Math {
     function calcAmount0Delta(
@@ -14,8 +16,8 @@ library Math {
         }
 
         require(sqrtPriceAX96 > 0);
-        amount0 = divRoundingUp(
-            mulDivRoundingUp(
+        amount0 = UnsafeMath.divRoundingUp(
+            FullMath.mulDivRoundingUp(
                 (uint256(liquidity) << FixedPoint96.RESOLUTION),
                 (sqrtPriceBX96 - sqrtPriceAX96),
                 sqrtPriceBX96
@@ -31,8 +33,7 @@ library Math {
     ) internal pure returns (uint256 amount1) {
         if (sqrtPriceAX96 > sqrtPriceBX96)
             (sqrtPriceAX96, sqrtPriceBX96) = (sqrtPriceBX96, sqrtPriceAX96);
-
-        amount1 = mulDivRoundingUp(
+        amount1 = FullMath.mulDivRoundingUp(
             liquidity,
             (sqrtPriceBX96 - sqrtPriceAX96),
             FixedPoint96.Q96
