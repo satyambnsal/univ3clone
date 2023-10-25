@@ -1,5 +1,4 @@
 // SPDX-License-Identifier: GPL-3.0
-
 pragma solidity ^0.8.14;
 
 import "./interfaces/IERC20.sol";
@@ -15,7 +14,7 @@ import "./lib/SwapMath.sol";
 
 contract UniswapV3Pool {
     using Tick for mapping(int24 => Tick.Info);
-    using TickBitMap for mapping(int16 => uint256);
+    using TickBitmap for mapping(int16 => uint256);
     using Position for mapping(bytes32 => Position.Info);
     using Position for Position.Info;
 
@@ -108,8 +107,6 @@ contract UniswapV3Pool {
         uint128 amount,
         bytes calldata data
     ) external returns (uint256 amount0, uint256 amount1) {
-        //TODO
-
         if (
             lowerTick >= upperTick ||
             lowerTick < MIN_TICK ||
@@ -147,7 +144,7 @@ contract UniswapV3Pool {
             TickMath.getSqrtRatioAtTick(upperTick),
             amount
         );
-        amount1 = Math.calcAmount0Delta(
+        amount1 = Math.calcAmount1Delta(
             TickMath.getSqrtRatioAtTick(slot0_.tick),
             TickMath.getSqrtRatioAtTick(lowerTick),
             amount
@@ -182,18 +179,14 @@ contract UniswapV3Pool {
         );
     }
 
+
+
     function swap(
         address recipient,
         bool zeroForOne,
         uint256 amountSpecified,
         bytes calldata data
     ) public returns (int256 amount0, int256 amount1) {
-        int24 nextTick = 85184;
-        uint160 nextPrice = 5604469350942327889444743441197;
-
-        amount0 = -0.008396714242162444 ether;
-        amount1 = 42 ether;
-
         Slot0 memory slot0_ = slot0;
         SwapState memory state = SwapState({
             amountSpecifiedRemaining: amountSpecified,

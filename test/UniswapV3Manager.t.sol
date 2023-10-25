@@ -5,6 +5,7 @@ import {Test, stdError} from "forge-std/Test.sol";
 import "./ERC20Mintable.sol";
 import "../src/UniswapV3Manager.sol";
 import "./TestUtils.sol";
+import "forge-std/console.sol";
 
 contract UniswapV3ManagerTest is Test, TestUtils {
     ERC20Mintable token0;
@@ -47,7 +48,7 @@ contract UniswapV3ManagerTest is Test, TestUtils {
             mintLiqudity: true
         });
         (uint256 poolBalance0, uint256 poolBalance1) = setupTestCase(params);
-
+        console.log("pool banaces", poolBalance0, poolBalance1);
         uint256 expectedAmount0 = 0.998833192822975409 ether;
         uint256 expectedAmount1 = 4999.187247111820044641 ether;
         assertEq(
