@@ -4,7 +4,6 @@ pragma solidity ^0.8.14;
 import "./interfaces/IERC20.sol";
 import "./interfaces/IUniswapV3MintCallback.sol";
 import "./interfaces/IUniswapV3SwapCallback.sol";
-
 import "./lib/Tick.sol";
 import "./lib/Position.sol";
 import "./lib/Math.sol";
@@ -135,10 +134,8 @@ contract UniswapV3Pool {
         uint256 balance0Before;
         uint256 balance1Before;
 
-        // amount0 = 0.998976618347425280 ether;
-        // amount1 = 5000 ether;
-
         Slot0 memory slot0_ = slot0;
+
         amount0 = Math.calcAmount0Delta(
             TickMath.getSqrtRatioAtTick(slot0_.tick),
             TickMath.getSqrtRatioAtTick(upperTick),
@@ -178,8 +175,6 @@ contract UniswapV3Pool {
             amount1
         );
     }
-
-
 
     function swap(
         address recipient,

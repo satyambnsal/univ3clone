@@ -50,7 +50,7 @@ const MetaMask = () => {
   const context = useContext(MetaMaskContext);
 
   return (
-    <section className="MetaMaskContainer">
+    <section className="MetaMaskContainer text-lg">
       {renderStatus(context.status, context.account, context.chain, context.connect)}
     </section>
   );
